@@ -18,6 +18,7 @@ class _ImageScreenState extends State<ImageScreen> {
       body: Column(
         spacing: 12,
         mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
         children: [
           Image.network(widget.url),
           ElevatedButton.icon(
