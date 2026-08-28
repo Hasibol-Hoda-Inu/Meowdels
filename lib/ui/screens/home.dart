@@ -23,16 +23,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: catImage,
-        child: Scaffold(
-          body: GetBuilder<CallDataController>(
-            builder: (controller) {
-              if (controller.inProgress) {
-                return Center(child: CircularProgressIndicator());
-              } else {
-                return GridView.builder(
+    return RefreshIndicator(
+      onRefresh: catImage,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Text(
+                "Meowdels",
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xfffe6739),
+                ),
+              ),
+              Image.asset("assets/images/icon.png", width: 40,)
+            ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: catImage,
+              icon: const Icon(Icons.refresh, color: Color(0xfffe6739),),
+            ),
+          ],
+        ),
+        body: GetBuilder<CallDataController>(
+          builder: (controller) {
+            if (controller.inProgress) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
@@ -43,19 +64,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     final cat = controller.catImages[index];
                     return InkWell(
                       onTap: () => onTap(cat.url ?? ""),
-                      child: Image.network(
-                        cat.url ?? "",
-                        fit: BoxFit.cover,
-                        cacheWidth: 300,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.broken_image),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          cat.url ?? "",
+                          fit: BoxFit.cover,
+                          cacheWidth: 300,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.broken_image),
+                        ),
                       ),
                     );
                   },
-                );
-              }
-            },
-          ),
+                ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -84,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
         "Meow!",
         "Your cat images are here",
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Color(0xfffe6739),
       );
     } else {
       Get.snackbar(
