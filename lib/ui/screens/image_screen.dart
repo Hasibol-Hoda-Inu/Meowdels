@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meowdels/ui/controllers/save_media_controller.dart';
+import 'package:meowdels/ui/widgets/shimmer_loading.dart';
 
 class ImageScreen extends StatefulWidget {
   final String url;
@@ -29,7 +31,11 @@ class _ImageScreenState extends State<ImageScreen> {
           spacing: 20,
           mainAxisAlignment: .center,
           children: [
-            Image.network(widget.url),
+            CachedNetworkImage(
+              imageUrl: widget.url,
+              placeholder: (context, url) => const ShimmerLoadingWidget(),
+              errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+            ),
             GetBuilder<SaveMediaController>(
               builder: (controller) {
                 if (controller.inProgress) {

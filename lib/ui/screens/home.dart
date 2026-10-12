@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meowdels/ui/controllers/call_data_controller.dart';
 import 'package:meowdels/ui/screens/image_screen.dart';
 import 'package:meowdels/ui/widgets/alart_box.dart';
+
+import '../widgets/shimmer_loading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
         body: GetBuilder<CallDataController>(
           builder: (controller) {
             if (controller.inProgress) {
-              return Center(child: CircularProgressIndicator());
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: 10, // Show 10 placeholder items while loading
+                  itemBuilder: (context, index) {
+                    return const ShimmerLoadingWidget();
+                  },
+                ),
+              );
             } else {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -66,12 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () => onTap(cat.url ?? ""),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          cat.url ?? "",
+                        child: CachedNetworkImage(
+                          imageUrl: cat.url ?? "",
                           fit: BoxFit.cover,
-                          cacheWidth: 300,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.broken_image),
+                          memCacheWidth: 300,
+                          placeholder: (context, url) => const ShimmerLoadingWidget(),
+                          errorWidget: (context, url, error) => const Icon(Icons.broken_image),
                         ),
                       ),
                     );

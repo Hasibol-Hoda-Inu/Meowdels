@@ -18,6 +18,8 @@ dependencies:
   app_settings: ^7.0.0
   gal: ^2.3.3
   path_provider: ^2.1.6
+  cached_network_image: ^4.0.4
+  shimmer: ^4.0.0
 
 dev_dependencies:
   flutter_test:
